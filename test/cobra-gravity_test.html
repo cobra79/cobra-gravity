@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>cobra-gravity test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../cobra-gravity.html">
+  </head>
+  <body>
+
+    <test-fixture id="13pIn">
+      <template>
+        <cobra-gravity plato-in="13" brixOut="[[brix-out]]"></cobra-gravity>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="3pIn">
+      <template>
+        <cobra-gravity plato-in="3" ></cobra-gravity>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="13.5BrixIn">
+      <template>
+        <cobra-gravity brix-in="13.5" ></cobra-gravity>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="DensityIn">
+      <template>
+        <cobra-gravity density-in="1.012" ></cobra-gravity>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('cobra-gravity', function() {
+
+          // test initial gravity
+         // 13°Plato = 13.5° Brix = 1.053 Gravity
+
+        //test final gravity
+        //3° Plato = 3.1° Brix = 1.012 Gravity
+        var toleranz = 3;
+
+        test('13P in -> brix', function() {
+          var element = fixture('13pIn');
+          var extpectedVal = 13.5;
+
+          assert(element.brixOut >  extpectedVal-(extpectedVal*toleranz/100));
+          assert(element.brixOut <  extpectedVal+(extpectedVal*toleranz/100));
+        });
+
+          test('13P in -> dense', function() {
+              var element = fixture('13pIn');
+              var extpectedVal = 1.053;
+
+              assert(element.densityOut >  extpectedVal-(extpectedVal*toleranz/100));
+              assert(element.densityOut <  extpectedVal+(extpectedVal*toleranz/100));
+          });
+
+          test('3P in -> brix', function() {
+              var element = fixture('3pIn');
+              var extpectedVal = 3.1;
+
+              assert(element.brixOut >  extpectedVal-(extpectedVal*toleranz/100));
+              assert(element.brixOut <  extpectedVal+(extpectedVal*toleranz/100));
+          });
+
+          test('3P in -> dense', function() {
+              var element = fixture('3pIn');
+              var extpectedVal = 1.012;
+
+              assert(element.densityOut >  extpectedVal-(extpectedVal*toleranz/100));
+              assert(element.densityOut <  extpectedVal+(extpectedVal*toleranz/100));
+          });
+
+          test('13.5BrixIn - > Plato', function () {
+              var element = fixture('13.5BrixIn');
+              var extpectedVal = 13;
+
+              assert(element.platoOut >  extpectedVal-(extpectedVal*toleranz/100));
+              assert(element.platoOut <  extpectedVal+(extpectedVal*toleranz/100));
+          })
+
+          test('13.5BrixIn - > Density', function () {
+              var element = fixture('13.5BrixIn');
+              var extpectedVal = 1.053;
+
+              assert(element.densityOut >  extpectedVal-(extpectedVal*toleranz/100));
+              assert(element.densityOut <  extpectedVal+(extpectedVal*toleranz/100));
+          })
+
+          test('Density  - > Plato', function () {
+              var element = fixture('DensityIn');
+              var extpectedVal = 3;
+
+              assert(element.platoOut >  extpectedVal-(extpectedVal*toleranz/100));
+              assert(element.platoOut <  extpectedVal+(extpectedVal*toleranz/100));
+          })
+
+          test('Density  - > Brix', function () {
+              var element = fixture('DensityIn');
+              var extpectedVal = 3.1;
+
+              assert(element.brixOut >  extpectedVal-(extpectedVal*toleranz/100));
+              assert(element.brixOut <  extpectedVal+(extpectedVal*toleranz/100));
+          })
+
+      });
+    </script>
+
+  </body>
+</html>

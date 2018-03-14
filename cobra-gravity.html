@@ -1,0 +1,117 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="cobra-gravity">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  </template>
+
+  <script>
+    /**
+     * `cobra-gravity`
+     * Convert density or brix to degree plato
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class CobraGravity extends Polymer.Element {
+      static get is() { return 'cobra-gravity'; }
+      static get properties() {
+        return {
+            platoIn: {
+              type: Number,
+                observer: 'platoInChanged'
+            },
+            platoOut: {
+              type: Number,
+                notify: true
+            },
+            brixIn: {
+                type: Number,
+                observer: 'brixInChanged'
+            },
+            brixOut:
+                {
+                    type:Number,
+                    notify:true
+                },
+            densityIn: {
+                type: Number,
+                observer: 'densityInChanged'
+            },
+            densityOut:{
+                type: Number,
+                notify:true
+            }
+
+        };
+      }
+        platoInChanged(newVal, oldVal)
+        {
+            console.log('platoIn changed');
+            this.platoOut = newVal;
+            this.brixOut = Math.round(1.04*newVal*100)/100
+            this.densityOut = Math.round(259/(259-newVal)*1e5)/1e5;
+        }
+        brixInChanged(newVal, oldVal)
+        {
+            console.log('brixIn changed');
+            this.brixOut = newVal;
+            var plato = Math.round(newVal/1.04*100)/100;
+            this.platoOut = plato;
+            this.densityOut = Math.round(259/(259-plato)*1e5)/1e5;
+        }
+        densityInChanged(newVal, oldVal)
+        {
+            console.log('densityIn changed');
+            this.densityOut = newVal;
+            var plato = Math.round(1e3*(259-259/newVal))/1e3;
+            this.platoOut = Math.round(1e3*(259-259/newVal))/1e3;
+            this.brixOut = Math.round(1.04*plato*100)/100;
+
+        }
+    }
+
+    window.customElements.define(CobraGravity.is, CobraGravity);
+  </script>
+</dom-module>
+
+<!--
+
+Polymer({
+is:"cobra-gravity",
+behaviors:[Polymer.AppLocalizeBehavior],
+properties:{
+  gravin:{type:Number,notify:!0,observer:"gravInChanged"},
+  plato:{type:Number,notify:!0},
+  title:{type:String,notify:!0,value:"Gravity"},
+  min:{type:Number,value:0},
+  max:{type:Number,notify:!0},step:{type:Number,notify:!0},
+  unit:{type:String,observer:"unitChanged"},
+  language:{value:"en",type:String},maximized:{type:Boolean,value:!1}},
+  unitChanged:
+    function(t,i)
+      {
+        if("Plato"==t)
+          {var e=this.plato;this.min=1,this.max=25,this.step=.1,this.gravin=e}
+        if("Brix"==t){var e=Math.round(1.04*this.plato*100)/100;this.min=1,this.max=25,this.step=.1,this.gravin=e}
+        if("Density"==t){var e=Math.round(259/(259-this.plato)*1e5)/1e5;this.min=1,this.max=1.2,this.step=.001,this.gravin=e}},
+  gravInChanged:
+    function(t,i){
+      console.log("gravInChanged to "+t+"from: "+i),this.plato=this.getPlato(this.gravin)},
+  getPlato:function(t){
+
+    return"Plato"===this.unit?t:
+    "Brix"===this.unit?Math.round(t/1.04*100)/100:
+    "Density"===this.unit?Math.round(1e3*(259-259/t))/1e3:0},
+
+
+  minimize:function(){this.maximized=!1},
+  maximize:function(){this.maximized=!0},
+  attached:function(){this.loadResources(this.resolveUrl("../locales.json")),this.gravin=this.plato}});
+
+-->
